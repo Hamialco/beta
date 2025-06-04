@@ -17,8 +17,8 @@
 .menu-btn {
   background: none;
   border: none;
-  color: white;
-  font-size: 1.5rem;
+  color: #f1c40f;
+  font-size: 3rem;
   cursor: pointer;
   padding: 0.5rem;
   margin: 0;
@@ -29,10 +29,11 @@
   position: absolute;
   right: 0;
   background: #8B1A29;
-  min-width: 160px;
+  min-width: 320px; /* Antes 160px */
   border-radius: 0 0 8px 8px;
   z-index: 1000;
   border: 1px solid rgba(255,255,255,0.1);
+  font-size: 1.5rem; /* Tamaño de letra más grande */
 }
 
 .menu-desplegable.active {
@@ -41,7 +42,7 @@
 
 .menu-desplegable a {
   color: white;
-  padding: 12px 16px;
+  padding: 24px 32px; /* Antes 12px 16px */
   text-decoration: none;
   display: block;
   transition: background 0.3s;
@@ -50,6 +51,7 @@
 .menu-desplegable a:hover {
   background: #A12B39;
 }
+
 </style>
 
 <script>
