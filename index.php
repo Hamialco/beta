@@ -2,8 +2,8 @@
 session_start();
 require_once 'config/database.php';
 
-// Obtener publicidad activa
-$stmt = $pdo->prepare("SELECT * FROM publicidad WHERE estado = 'activo' AND (fecha_activacion IS NULL OR fecha_activacion <= NOW()) AND fecha_desactivacion > NOW() ORDER BY RAND() LIMIT 1");
+// Obtener publicidad activa (consulta simplificada)
+$stmt = $pdo->prepare("SELECT * FROM publicidad WHERE estado = 'activo' ORDER BY RAND() LIMIT 1");
 $stmt->execute();
 $publicidad = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -28,58 +28,116 @@ $proyectos_chunks = array_chunk($proyectos, 4);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galería de Emprendimientos</title>
+    <title>Mural Maz Lince</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-        <link href="assets/styles.css" rel="stylesheet">
+    <link href="assets/styles.css" rel="stylesheet">
+    <style>
+        /* Estilos específicos para el index */
+        .publicidad-banner {
+            width: 100%;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .publicidad-banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .swiper-project-slide {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1; /* Mantiene proporción cuadrada */
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            margin: 0 auto;
+        }
+        
+        .swiper-project-slide:hover {
+            transform: scale(1.05);
+        }
+        
+        .swiper-container {
+            margin: 20px 0;
+            padding: 20px 0;
+        }
+        
+        .swiper-pagination {
+            position: relative !important;
+            margin-top: 20px !important;
+        }
+        
+        .swiper-pagination-bullet {
+            background: #1f4f82;
+            opacity: 0.5;
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: #1f4f82;
+            opacity: 1;
+        }
+        
+        /* Estilos corregidos para las secciones */
+        .entrepreneur-section .cta-btn {
+            background: #f1c40f;
+            color: #000;
+            border: 2px solid #f1c40f;
+        }
+        
+        .entrepreneur-section .cta-btn:hover {
+            background: #f39c12;
+            color: #000;
+            border-color: #f39c12;
+        }
+        
+        .register-section {
+            background: #f1c40f;
+            color: #000;
+        }
+        
+        .register-section .cta-btn {
+            background: #1f4f82;
+            color: white;
+            border: 2px solid #1f4f82;
+        }
+        
+        .register-section .cta-btn:hover {
+            background: #2c5aa0;
+            color: white;
+            border-color: #2c5aa0;
+        }
+        
+        @media (max-width: 768px) {
+            .swiper-project-slide {
+                /* El aspect-ratio se mantiene, no necesitamos altura fija */
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .swiper-project-slide {
+                /* El aspect-ratio se mantiene, no necesitamos altura fija */
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">🖼️ Galería Emprendedores</a>
-            <div class="navbar-nav ms-auto">
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <span class="navbar-text me-3">Hola, <?php echo htmlspecialchars($_SESSION['nombre'] ?? $_SESSION['matricula']); ?></span>
-                    <?php if ($_SESSION['rol'] === 'emprendedor'): ?>
-                        <a class="nav-link" href="dashboard.php">Dashboard</a>
-                    <?php endif; ?>
-                    <a class="nav-link" href="logout.php">Cerrar Sesión</a>
-                <?php else: ?>
-                    <a class="nav-link" href="login.php">Iniciar Sesión</a>
-                    <a class="nav-link" href="register.php">Registrarse</a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/header.php'; ?>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container text-center">
-            <h1 class="display-4 mb-4">Descubre Emprendimientos Estudiantiles</h1>
-            <p class="lead">Una plataforma donde los estudiantes muestran sus proyectos y servicios</p>
-        </div>
-    </section>
-
-    <!-- Publicidad Section -->
+    <!-- Publicidad Banner -->
     <?php if ($publicidad): ?>
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Eventos y Anuncios</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="publicidad-card">
-                        <img src="<?php echo htmlspecialchars($publicidad['imagen']); ?>" 
-                             class="card-img-top" alt="<?php echo htmlspecialchars($publicidad['titulo']); ?>"
-                             style="height: 300px; object-fit: cover;">
-                        <div class="card-body bg-dark text-white">
-                            <h5 class="card-title"><?php echo htmlspecialchars($publicidad['titulo']); ?></h5>
-                            <p class="card-text"><?php echo htmlspecialchars($publicidad['propietario']); ?></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <section class="publicidad-banner">
+        <img src="<?php echo htmlspecialchars($publicidad['imagen']); ?>" 
+             alt="<?php echo htmlspecialchars($publicidad['titulo']); ?>">
     </section>
     <?php endif; ?>
 
@@ -94,30 +152,12 @@ $proyectos_chunks = array_chunk($proyectos, 4);
                 </div>
             <?php else: ?>
                 <?php foreach ($proyectos_chunks as $index => $chunk): ?>
-                    <div class="swiper-container mb-4" id="swiper-<?php echo $index; ?>">
+                    <div class="swiper-container" id="swiper-<?php echo $index; ?>">
                         <div class="swiper-wrapper">
-                            <?php 
-                            // Duplicar slides para efecto infinito
-                            $slides = array_merge($chunk, $chunk, $chunk);
-                            foreach ($slides as $proyecto): 
-                            ?>
+                            <?php foreach ($chunk as $proyecto): ?>
                                 <div class="swiper-slide">
-                                    <div class="project-slide position-relative" 
-                                         style="background-image: url('<?php echo htmlspecialchars($proyecto['imagen_principal']); ?>');"
-                                         onclick="<?php echo isset($_SESSION['user_id']) ? "showProjectModal(" . $proyecto['id'] . ")" : "showLoginRequired()"; ?>">
-                                        
-                                        <?php if (!isset($_SESSION['user_id'])): ?>
-                                            <div class="blur-overlay position-absolute w-100 h-100"></div>
-                                            <div class="login-required">
-                                                <h6>¡Regístrate para ver más detalles!</h6>
-                                                <a href="register.php" class="btn btn-primary btn-sm mt-2">Registrarse</a>
-                                            </div>
-                                        <?php endif; ?>
-                                        
-                                        <div class="project-overlay">
-                                            <h6 class="mb-1"><?php echo htmlspecialchars($proyecto['titulo']); ?></h6>
-                                            <small><?php echo htmlspecialchars($proyecto['categoria_nombre']); ?></small>
-                                        </div>
+                                    <div class="swiper-project-slide" 
+                                         style="background-image: url('<?php echo htmlspecialchars($proyecto['imagen_principal']); ?>');">
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -129,42 +169,23 @@ $proyectos_chunks = array_chunk($proyectos, 4);
         </div>
     </section>
 
-    <!-- Register CTA -->
-    <section class="register-section">
-        <div class="container text-center">
-            <h2 class="mb-4">¡Únete a Nuestra Comunidad!</h2>
-            <p class="lead mb-4">Regístrate para explorar todos los proyectos y conectar con emprendedores</p>
-            <a href="register.php" class="cta-btn">Registrarse Ahora</a>
-        </div>
-    </section>
-
-    <!-- Entrepreneur CTA -->
+    <!-- Seccion azul -->
     <section class="entrepreneur-section">
         <div class="container text-center">
-            <h2 class="mb-4">¿Tienes un Emprendimiento?</h2>
-            <p class="lead mb-4">Solicita convertirte en emprendedor y comparte tus proyectos con la comunidad</p>
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="solicitud-emprendedor.php" class="cta-btn">Enviar Solicitud</a>
-            <?php else: ?>
-                <a href="register.php" class="cta-btn">Regístrate Primero</a>
-            <?php endif; ?>
+            <h2 class="mb-4">¿Tienes un emprendimiento?</h2>
+            <p class="lead mb-4">Hagamos que todos se enteren de él.</p>
+            <a href="login.php" class="cta-btn">Cuéntanos más</a>
         </div>
     </section>
 
-    <!-- Modal para detalles del proyecto -->
-    <div class="modal fade" id="projectModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="projectModalTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="projectModalBody">
-                    <!-- Content loaded via AJAX -->
-                </div>
-            </div>
+    <!-- Seccion amarillo -->
+    <section class="register-section">
+        <div class="container text-center">
+            <h2 class="mb-4">¿Ya te registraste?</h2>
+            <p class="lead mb-4">Podrás contactar directamente a los emprendedores o volverte uno.</p>
+            <a href="register.php" class="cta-btn">Únete</a>
         </div>
-    </div>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
@@ -174,6 +195,7 @@ $proyectos_chunks = array_chunk($proyectos, 4);
         new Swiper('#swiper-<?php echo $index; ?>', {
             slidesPerView: 'auto',
             spaceBetween: 20,
+            centeredSlides: false,
             loop: true,
             autoplay: {
                 delay: 3000,
@@ -184,41 +206,31 @@ $proyectos_chunks = array_chunk($proyectos, 4);
                 clickable: true,
             },
             breakpoints: {
-                640: {
+                320: {
                     slidesPerView: 1,
+                    spaceBetween: 10,
+                },
+                576: {
+                    slidesPerView: 1,
+                    spaceBetween: 15,
                 },
                 768: {
                     slidesPerView: 2,
+                    spaceBetween: 20,
                 },
                 1024: {
                     slidesPerView: 3,
+                    spaceBetween: 20,
                 },
                 1200: {
                     slidesPerView: 4,
+                    spaceBetween: 20,
                 }
             }
         });
         <?php endforeach; ?>
-
-        function showProjectModal(projectId) {
-            fetch(`get-project-details.php?id=${projectId}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('projectModalTitle').textContent = data.titulo;
-                    document.getElementById('projectModalBody').innerHTML = data.html;
-                    new bootstrap.Modal(document.getElementById('projectModal')).show();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error al cargar los detalles del proyecto');
-                });
-        }
-
-        function showLoginRequired() {
-            alert('¡Regístrate para ver más detalles de los proyectos!');
-            window.location.href = 'register.php';
-        }
     </script>
-        <?php include 'includes/footer.php'; ?>
+    
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

@@ -1,6 +1,18 @@
 <?php
-session_start();
+// Incluir configuración de sesión centralizada
+require_once 'includes/session_config.php';
 require_once 'config/database.php';
+
+// Si ya está logueado, redirigir
+if (is_logged_in()) {
+    $role = get_user_role();
+    if ($role === 'emprendedor' || $role === 'admin') {
+        header('Location: dashboard.php');
+    } else {
+        header('Location: index.php');
+    }
+    exit;
+}
 
 $error = '';
 
@@ -14,12 +26,16 @@ if ($_POST) {
         $user = $stmt->fetch();
         
         if ($user) {
+            // Configurar sesión para que se cierre al cerrar navegador
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['matricula'] = $user['matricula'];
             $_SESSION['rol'] = $user['rol'];
             $_SESSION['nombre'] = $user['nombre'];
             
-            if ($user['rol'] === 'emprendedor') {
+            // Regenerar ID de sesión por seguridad
+            session_regenerate_id(true);
+            
+            if ($user['rol'] === 'emprendedor' || $user['rol'] === 'admin') {
                 header('Location: dashboard.php');
             } else {
                 header('Location: index.php');
@@ -64,6 +80,7 @@ if ($_POST) {
                                     <input type="text" class="form-control" id="matricula" name="matricula" 
                                            pattern="2[0-9]{7}" 
                                            maxlength="8"
+                                           value="<?php echo htmlspecialchars($_POST['matricula'] ?? ''); ?>"
                                            required>
                                 </div>
                                 
@@ -89,5 +106,35 @@ if ($_POST) {
     </div>
     
     <?php include 'includes/footer.php'; ?>
+    
+    <!-- Script para detectar cierre de pestaña/navegador -->
+    <script>
+    // Detectar cuando se cierra la pestaña o navegador
+    window.addEventListener('beforeunload', function(e) {
+        // Enviar solicitud para limpiar sesión del lado del servidor
+        navigator.sendBeacon('includes/cleanup_session.php');
+    });
+    
+    // También detectar cuando la página pierde el foco por mucho tiempo
+    let pageHidden = false;
+    let hiddenTime = null;
+    
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            pageHidden = true;
+            hiddenTime = Date.now();
+        } else {
+            if (pageHidden && hiddenTime) {
+                // Si la página estuvo oculta por más de 30 minutos, cerrar sesión
+                const timeDiff = Date.now() - hiddenTime;
+                if (timeDiff > 1800000) { // 30 minutos en milisegundos
+                    window.location.href = 'includes/cleanup_session.php?redirect=true';
+                }
+            }
+            pageHidden = false;
+            hiddenTime = null;
+        }
+    });
+    </script>
 </body>
 </html>

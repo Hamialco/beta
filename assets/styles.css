@@ -385,6 +385,23 @@ body {
     color: rgba(255, 255, 255, 0.9) !important;
 }
 
+/* Publicidad Banner */
+.publicidad-banner {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.publicidad-banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
 .hero-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -402,10 +419,28 @@ body {
     transform: translateY(-5px);
 }
 
+/* Swiper Containers y Project Slides */
 .swiper-container {
     margin: 20px 0;
+    padding: 20px 0;
+}
+
+.swiper-project-slide {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1; /* Mantiene proporción cuadrada */
+    background-size: cover;
+    background-position: center;
     border-radius: 15px;
     overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.swiper-project-slide:hover {
+    transform: scale(1.05);
 }
 
 .project-slide {
@@ -422,6 +457,21 @@ body {
     transform: scale(1.05);
 }
 
+.swiper-pagination {
+    position: relative !important;
+    margin-top: 20px !important;
+}
+
+.swiper-pagination-bullet {
+    background: #1f4f82;
+    opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+    background: #1f4f82;
+    opacity: 1;
+}
+
 .project-overlay {
     position: absolute;
     bottom: 0;
@@ -433,16 +483,41 @@ body {
     border-radius: 0 0 10px 10px;
 }
 
-.register-section {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+/* Secciones de CTA */
+.entrepreneur-section {
+    background: #1f4f82;
     color: white;
     padding: 60px 0;
 }
 
-.entrepreneur-section {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
+.entrepreneur-section .cta-btn {
+    background: #f1c40f;
+    color: #000;
+    border: 2px solid #f1c40f;
+}
+
+.entrepreneur-section .cta-btn:hover {
+    background: #f39c12;
+    color: #000;
+    border-color: #f39c12;
+}
+
+.register-section {
+    background: #f1c40f;
+    color: #000;
     padding: 60px 0;
+}
+
+.register-section .cta-btn {
+    background: #1f4f82;
+    color: white;
+    border: 2px solid #1f4f82;
+}
+
+.register-section .cta-btn:hover {
+    background: #2c5aa0;
+    color: white;
+    border-color: #2c5aa0;
 }
 
 .cta-btn {
@@ -453,11 +528,13 @@ body {
     border-radius: 50px;
     text-decoration: none;
     transition: all 0.3s ease;
+    display: inline-block;
 }
 
 .cta-btn:hover {
     background: white;
     color: #333;
+    text-decoration: none;
 }
 
 .blur-overlay {
@@ -504,6 +581,7 @@ body {
     .form-container {
         padding: 1.5rem;
     }
+
 }
 
 @media (max-width: 576px) {
@@ -543,6 +621,7 @@ body {
     .register-form {
         margin: 0.5rem;
     }
+
 }
 
 @media (max-width: 400px) {    
