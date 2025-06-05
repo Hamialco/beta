@@ -6,10 +6,11 @@ require_once 'config/database.php';
 // Si ya está logueado, redirigir
 if (is_logged_in()) {
     $role = get_user_role();
-    if ($role === 'emprendedor' || $role === 'admin') {
-        header('Location: dashboard.php');
+    if ($role === 'admin') {
+        header('Location: admin.php');
     } else {
-        header('Location: index.php');
+        // Tanto estudiantes como emprendedores van al dashboard
+        header('Location: dashboard.php');
     }
     exit;
 }
@@ -35,10 +36,12 @@ if ($_POST) {
             // Regenerar ID de sesión por seguridad
             session_regenerate_id(true);
             
-            if ($user['rol'] === 'emprendedor' || $user['rol'] === 'admin') {
-                header('Location: dashboard.php');
+            // Nueva lógica de redirección
+            if ($user['rol'] === 'admin') {
+                header('Location: admin.php');
             } else {
-                header('Location: index.php');
+                // Tanto estudiantes como emprendedores van al dashboard
+                header('Location: dashboard.php');
             }
             exit;
         } else {
@@ -58,10 +61,10 @@ if ($_POST) {
     <title>Iniciar Sesión - MML</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/styles.css" rel="stylesheet">
-<style>
+    <style>
         /* LOGIN - Estilos específicos */
         .login-body {
-            background: linear-gradient(135deg, #1f4f82 0%, #2c5aa0 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         }
 
         .login-form {
@@ -71,13 +74,20 @@ if ($_POST) {
 
         .login-form h2 {
             color: #f1c40f;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
             margin-bottom: 3rem;
             font-size: 2.25rem;
+            font-weight: 700;
         }
 
         .form-container {
             padding: 3rem 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: #333;
+            font-size: 1.2rem;
         }
 
         .login-form .form-label {
@@ -86,47 +96,77 @@ if ($_POST) {
             font-size: 1.2rem;
         }
 
-        .login-form .form-control {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: rgba(255, 255, 255, 0.3);
+        .form-control {
+            border: 3px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.125rem;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
         }
 
-        .login-form .form-control:focus {
+        .form-control:focus {
             border-color: #f1c40f;
             box-shadow: 0 0 0 0.2rem rgba(241, 196, 15, 0.25);
             background: white;
         }
 
-        .login-form .btn-primary {
+        .btn-primary {
             background: #f1c40f;
-            color: black;
-            font-weight: 600;
-            font-size: 1.2rem;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: #2c3e50;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            border-radius: 12px;
+            padding: 1.125rem;
+            font-size: 1.1rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            border-radius: 12px;
+            padding: 1.125rem;
+            font-size: 1.1rem;
+        }
+
+        /* Enlaces */
+        .text-center a { 
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .text-center a:hover {
+            color: #f1c40f;
+            text-decoration: underline;
+        }
+
+        .text-muted {
+            color: white !important;
+        }
+
+        .text-muted:hover {
+            color: #f1c40f !important;
         }
 
         .welcome-text {
             color: white;
             text-align: center;
             margin-bottom: 3rem;
-            font-size: 1.1rem;
-            line-height: 1.5;
-        }
-
-        .login-form .text-center a {
-            color: #f1c40f;
-            font-size: 1.1rem;
-        }
-
-        .login-form .text-center a:hover {
-            color: #f39c12;
-        }
-
-        .login-form .text-muted {
-            color: rgba(255, 255, 255, 0.7) !important;
-        }
-
-        .login-form .text-muted:hover {
-            color: rgba(255, 255, 255, 0.9) !important;
+            font-size: 1.5rem;
+            line-height: 2;
+            font-weight: 550;
         }
 
         /* Responsive para login */
@@ -174,17 +214,18 @@ if ($_POST) {
                             <p class="welcome-text">
                                 Ya puedes enterarte de los mejores productos y servicios de la comunidad lince ¡Incluso tener tu propio emprendimiento!
                             </p>
+                            
                             <?php if ($error): ?>
                                 <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
                             <?php endif; ?>
                             
-                            <form method="POST">
+                            <form method="POST" id="loginForm">
                                 <div class="mb-3">
                                     <label for="matricula" class="form-label">Matrícula</label>
                                     <input type="text" class="form-control" id="matricula" name="matricula" 
                                            pattern="2[0-9]{7}" 
                                            maxlength="8"
-                                           value="<?php echo htmlspecialchars($_POST['matricula'] ?? ''); ?>"
+                                           value="<?php echo htmlspecialchars($_POST['matricula'] ?? ''); ?>" 
                                            required>
                                 </div>
                                 
@@ -195,7 +236,7 @@ if ($_POST) {
                                            required>
                                 </div>
                                 
-                                <button type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
+                                <button type="submit" class="btn btn-primary w-100 mb-3" id="submitBtn">Entrar</button>
                             </form>
                             
                             <div class="text-center">
@@ -214,11 +255,10 @@ if ($_POST) {
     <!-- Script para detectar cierre de pestaña/navegador -->
     <script>
     // Detectar cuando se cierra la pestaña o navegador
-    window.addEventListener('beforeunload', function(e) {
+   // window.addEventListener('beforeunload', function(e) {
         // Enviar solicitud para limpiar sesión del lado del servidor
-        navigator.sendBeacon('includes/cleanup_session.php');
-    });
-    
+       // navigator.sendBeacon('includes/cleanup_session.php');
+    //});
     // También detectar cuando la página pierde el foco por mucho tiempo
     let pageHidden = false;
     let hiddenTime = null;

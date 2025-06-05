@@ -29,7 +29,7 @@ if ($_POST) {
             $stmt = $pdo->prepare("INSERT INTO usuarios (matricula, password, rol) VALUES (?, ?, 'estudiante')");
             
             if ($stmt->execute([$matricula, $password])) {
-                $success = 'Registro exitoso. Ahora puedes iniciar sesión.';
+                $success = 'Registro exitoso. Serás redirigido al login en 3 segundos...';
             } else {
                 $error = 'Error al registrar el usuario';
             }
@@ -61,6 +61,7 @@ if ($_POST) {
             color: #1f4f82;
             margin-bottom: 3rem;
             font-size: 2.25rem;
+            font-weight: 700;
         }
 
         .form-container {
@@ -75,7 +76,7 @@ if ($_POST) {
         }
 
         .register-form .form-label {
-            color: #1f4f82;
+            color: #2c3e50;
             font-weight: 600;
             font-size: 1.2rem;
         }
@@ -173,6 +174,15 @@ if ($_POST) {
             color: #495057 !important;
         }
 
+        .welcome-text {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 1.5rem;
+            line-height: 2;
+            font-weight: 550;
+        }
+
         /* Responsive para register */
         @media (max-width: 768px) {
             .main-content {
@@ -215,7 +225,9 @@ if ($_POST) {
                     <div class="register-form">
                         <div class="form-container">
                             <h2 class="text-center">Regístrate</h2>
-                            
+                            <p class="welcome-text">
+                                Obten todos los detalles de las ofertas que la comunidad emprendedora tiene para ti y contacta con los emprendedores facilmente.
+                            </p>
                             <?php if ($error): ?>
                                 <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
                             <?php endif; ?>
@@ -226,7 +238,7 @@ if ($_POST) {
                             
                             <form method="POST" id="registerForm">
                                 <div class="mb-3">
-                                    <label for="matricula" class="form-label">Matrícula</label>
+                                    <label for="matricula" class="form-label">Matrícula:</label>
                                     <input type="text" class="form-control" id="matricula" name="matricula" 
                                            pattern="2[0-9]{7}" 
                                            maxlength="8"
@@ -235,21 +247,21 @@ if ($_POST) {
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label for="password" class="form-label">Contraseña</label>
+                                    <label for="password" class="form-label">Contraseña:</label>
                                     <input type="password" class="form-control" id="password" name="password" 
                                            minlength="6" maxlength="8" 
                                            required>
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
+                                    <label for="confirm_password" class="form-label">Confirmar Contraseña:</label>
                                     <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
                                            minlength="6" maxlength="8" 
                                            required>
                                     <div id="passwordMatch" class="match-indicator" style="display: none;"></div>
                                 </div>
                                 
-                                <button type="submit" class="btn btn-primary w-100 mb-3" id="submitBtn">Registrarse</button>
+                                <button type="submit" class="btn btn-primary w-100 mb-3" id="submitBtn">Unirse</button>
                             </form>
                             
                             <div class="text-center">
@@ -285,18 +297,25 @@ if ($_POST) {
                 if (pass1 === pass2) {
                     confirmPassword.classList.remove('password-mismatch');
                     confirmPassword.classList.add('password-match');
-                    matchIndicator.textContent = '✓ Las contraseñas coinciden';
+                    matchIndicator.textContent = 'Las contraseñas coinciden';
                     matchIndicator.className = 'match-indicator success';
                 } else {
                     confirmPassword.classList.remove('password-match');
                     confirmPassword.classList.add('password-mismatch');
-                    matchIndicator.textContent = '✗ Las contraseñas no coinciden';
+                    matchIndicator.textContent = 'Las contraseñas no coinciden';
                     matchIndicator.className = 'match-indicator error';
                 }
             }
             
             password.addEventListener('input', checkPasswordMatch);
             confirmPassword.addEventListener('input', checkPasswordMatch);
+            
+            // Redirección automática después del registro exitoso
+            <?php if ($success): ?>
+                setTimeout(function() {
+                    window.location.href = 'login.php?registered=1';
+                }, 3000);
+            <?php endif; ?>
         });
     </script>
     

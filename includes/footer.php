@@ -3,24 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Footer con Estilos Internos</title>
     <style>
-        /* Estilos básicos para el body */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Estilos del Footer */
         .footer {
             background: #8B1A29;
             color: white;
@@ -172,41 +156,9 @@
                 gap: 0.6rem;
             }
         }
-
-        /* Estilos adicionales para el contenido de ejemplo */
-        .main-content {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem 1.5rem;
-            background: #f8f9fa;
-        }
-
-        .content-wrapper {
-            text-align: center;
-            max-width: 800px;
-        }
-
-        .content-wrapper h1 {
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
-        .content-wrapper p {
-            color: #666;
-            font-size: 1.1rem;
-        }
     </style>
 </head>
 <body>
-    <!-- Contenido principal de ejemplo -->
-    <div class="main-content">
-        <div class="content-wrapper">
-            <h1>Página de Ejemplo</h1>
-            <p>Este es un ejemplo de página con el footer integrado y estilos internos.</p>
-        </div>
-    </div>
 
     <!-- Footer -->
     <footer class="footer">
