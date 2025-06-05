@@ -32,103 +32,6 @@ $proyectos_chunks = array_chunk($proyectos, 4);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <link href="assets/styles.css" rel="stylesheet">
-    <style>
-        /* Estilos específicos para el index */
-        .publicidad-banner {
-            width: 100%;
-            height: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        
-        .publicidad-banner img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: contain;
-        }
-        
-        .swiper-project-slide {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1/1; /* Mantiene proporción cuadrada */
-            background-size: cover;
-            background-position: center;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-            margin: 0 auto;
-        }
-        
-        .swiper-project-slide:hover {
-            transform: scale(1.05);
-        }
-        
-        .swiper-container {
-            margin: 20px 0;
-            padding: 20px 0;
-        }
-        
-        .swiper-pagination {
-            position: relative !important;
-            margin-top: 20px !important;
-        }
-        
-        .swiper-pagination-bullet {
-            background: #1f4f82;
-            opacity: 0.5;
-        }
-        
-        .swiper-pagination-bullet-active {
-            background: #1f4f82;
-            opacity: 1;
-        }
-        
-        /* Estilos corregidos para las secciones */
-        .entrepreneur-section .cta-btn {
-            background: #f1c40f;
-            color: #000;
-            border: 2px solid #f1c40f;
-        }
-        
-        .entrepreneur-section .cta-btn:hover {
-            background: #f39c12;
-            color: #000;
-            border-color: #f39c12;
-        }
-        
-        .register-section {
-            background: #f1c40f;
-            color: #000;
-        }
-        
-        .register-section .cta-btn {
-            background: #1f4f82;
-            color: white;
-            border: 2px solid #1f4f82;
-        }
-        
-        .register-section .cta-btn:hover {
-            background: #2c5aa0;
-            color: white;
-            border-color: #2c5aa0;
-        }
-        
-        @media (max-width: 768px) {
-            .swiper-project-slide {
-                /* El aspect-ratio se mantiene, no necesitamos altura fija */
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .swiper-project-slide {
-                /* El aspect-ratio se mantiene, no necesitamos altura fija */
-            }
-        }
-    </style>
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
@@ -190,6 +93,36 @@ $proyectos_chunks = array_chunk($proyectos, 4);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
+        // Función para cerrar sesión al cerrar ventana
+        function setupSessionCleanup() {
+            // Detectar cierre de ventana/pestaña
+            window.addEventListener('beforeunload', function(e) {
+                // Usar sendBeacon para enviar petición de limpieza de sesión
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon('includes/cleanup_session.php');
+                } else {
+                    // Fallback para navegadores antiguos
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'includes/cleanup_session.php', false);
+                    xhr.send();
+                }
+            });
+
+            // Detectar cambio de página (navegación interna)
+            window.addEventListener('pagehide', function(e) {
+                if (e.persisted) return; // No hacer nada si la página va al cache
+                
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon('includes/cleanup_session.php');
+                }
+            });
+        }
+
+        // Inicializar limpieza de sesión solo si hay usuario logueado
+        <?php if (isset($_SESSION['user_id'])): ?>
+        setupSessionCleanup();
+        <?php endif; ?>
+
         // Initialize Swipers
         <?php foreach ($proyectos_chunks as $index => $chunk): ?>
         new Swiper('#swiper-<?php echo $index; ?>', {

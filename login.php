@@ -55,9 +55,111 @@ if ($_POST) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Galería Emprendedores</title>
+    <title>Iniciar Sesión - MML</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/styles.css" rel="stylesheet">
+<style>
+        /* LOGIN - Estilos específicos */
+        .login-body {
+            background: linear-gradient(135deg, #1f4f82 0%, #2c5aa0 100%);
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .login-form h2 {
+            color: #f1c40f;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            margin-bottom: 3rem;
+            font-size: 2.25rem;
+        }
+
+        .form-container {
+            padding: 3rem 1.5rem;
+        }
+
+        .login-form .form-label {
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .login-form .form-control {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .login-form .form-control:focus {
+            border-color: #f1c40f;
+            box-shadow: 0 0 0 0.2rem rgba(241, 196, 15, 0.25);
+            background: white;
+        }
+
+        .login-form .btn-primary {
+            background: #f1c40f;
+            color: black;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .welcome-text {
+            color: white;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .login-form .text-center a {
+            color: #f1c40f;
+            font-size: 1.1rem;
+        }
+
+        .login-form .text-center a:hover {
+            color: #f39c12;
+        }
+
+        .login-form .text-muted {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        .login-form .text-muted:hover {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        /* Responsive para login */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-container {
+                padding: 1rem;
+            }
+            
+            .login-form {
+                margin: 0.5rem;
+            }
+        }
+
+        @media (max-width: 400px) {    
+            .form-control {
+                padding: 0.6rem;
+            }
+            
+            .btn-primary {
+                padding: 0.6rem;
+            }
+        }
+    </style>
 </head>
 <body class="login-body">
     <?php include 'includes/header.php'; ?>
@@ -69,7 +171,9 @@ if ($_POST) {
                     <div class="login-form">
                         <div class="form-container">
                             <h2 class="text-center">Iniciar Sesión</h2>
-                            
+                            <p class="welcome-text">
+                                Ya puedes enterarte de los mejores productos y servicios de la comunidad lince ¡Incluso tener tu propio emprendimiento!
+                            </p>
                             <?php if ($error): ?>
                                 <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
                             <?php endif; ?>
@@ -91,7 +195,7 @@ if ($_POST) {
                                            required>
                                 </div>
                                 
-                                <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
+                                <button type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
                             </form>
                             
                             <div class="text-center">

@@ -46,6 +46,164 @@ if ($_POST) {
     <title>Registrarse - Galería Emprendedores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/styles.css" rel="stylesheet">
+    <style>
+        /* REGISTER - Estilos específicos */
+        .register-body {
+            background: white;
+        }
+
+        .register-form {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .register-form h2 {
+            color: #1f4f82;
+            margin-bottom: 3rem;
+            font-size: 2.25rem;
+        }
+
+        .form-container {
+            padding: 3rem 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .register-form .form-label {
+            color: #1f4f82;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .form-control {
+            border: 3px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.125rem;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus {
+            border-color: #1f4f82;
+            box-shadow: 0 0 0 0.2rem rgba(31, 79, 130, 0.25);
+            background: white;
+        }
+
+        .btn-primary {
+            background: #1f4f82;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #2c5aa0;
+            transform: translateY(-1px);
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            border-radius: 12px;
+            padding: 1.125rem;
+            font-size: 1.1rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            border-radius: 12px;
+            padding: 1.125rem;
+            font-size: 1.1rem;
+        }
+
+        /* Validación en tiempo real */
+        .password-match {
+            border-color: #28a745 !important;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+        }
+
+        .password-mismatch {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        }
+
+        .match-indicator {
+            font-size: 1.3125rem;
+            margin-top: 0.375rem;
+            font-weight: 500;
+        }
+
+        .match-indicator.success {
+            color: #28a745;
+        }
+
+        .match-indicator.error {
+            color: #dc3545;
+        }
+
+        /* Enlaces */
+        .text-center a {
+            color: #1f4f82;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .text-center a:hover {
+            color: #2c5aa0;
+            text-decoration: underline;
+        }
+
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        .text-muted:hover {
+            color: #495057 !important;
+        }
+
+        /* Responsive para register */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-container {
+                padding: 1rem;
+            }
+            
+            .register-form {
+                margin: 0.5rem;
+            }
+        }
+
+        @media (max-width: 400px) {    
+            .form-control {
+                padding: 0.6rem;
+            }
+            
+            .btn-primary {
+                padding: 0.6rem;
+            }
+        }
+    </style>
 </head>
 <body class="register-body">
     <?php include 'includes/header.php'; ?>
